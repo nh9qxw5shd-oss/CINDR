@@ -127,7 +127,9 @@ export function TileSheet({ tile, role, onClose, onChanged }: Props) {
           {someoneElse && (
             <ActionBtn
               busy={busy === "force-claim"}
-              onClick={() => run("force-claim", () => claimIncident(tile.incident_number, role))}
+              onClick={() =>
+                run("force-claim", () => claimIncident(tile.incident_number, role, true))
+              }
               tone="warn"
             >
               Take from {tile.owner_role}

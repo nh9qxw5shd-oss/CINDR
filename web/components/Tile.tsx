@@ -28,31 +28,31 @@ export function Tile({ tile, role, onClick }: Props) {
       className={
         "group relative corner-ticks text-left bg-navy-900/80 border " +
         tone +
-        " p-3 md:p-4 flex flex-col gap-2 outline-none focus-visible:ring-2 focus-visible:ring-orange" +
+        " p-5 md:p-6 flex flex-col gap-3 outline-none focus-visible:ring-2 focus-visible:ring-orange" +
         (tile.recent_event_flag ? " recent-pulse" : "")
       }
     >
       <CornerTicks />
 
       <div className="flex items-start justify-between gap-2">
-        <span className="font-mono text-[11px] tracking-wide2 uppercase text-ink-dimmer">
+        <span className="font-mono text-xs tracking-wide2 uppercase text-ink-dimmer">
           {tile.incident_number}
         </span>
-        <span className="font-mono text-[11px] text-orange tabular-nums">
+        <span className="font-mono text-sm text-orange tabular-nums">
           {formatDuration(tile.duration_seconds)}
         </span>
       </div>
 
-      <div className="font-sans text-ink text-sm leading-snug line-clamp-2 min-h-[2.4em]">
+      <div className="font-sans font-semibold text-ink text-xl leading-snug line-clamp-2 min-h-[2.6em]">
         {tile.title || "—"}
       </div>
 
-      <div className="font-mono text-[11px] text-ink-dim uppercase tracking-wide2 line-clamp-1">
+      <div className="font-mono text-xs text-ink-dim uppercase tracking-wide2 line-clamp-1">
         {tile.from_location || "—"}
         {tile.to_location ? <> &nbsp;→&nbsp; {tile.to_location}</> : null}
       </div>
 
-      <div className="mt-auto flex items-center justify-between font-mono text-[10px] tracking-wide2 uppercase">
+      <div className="mt-auto flex items-center justify-between font-mono text-[11px] tracking-wide2 uppercase">
         <span className="text-ink-dimmer">
           {tile.fault_number ? `F ${tile.fault_number}` : ""}
           {tile.fault_number && tile.tda_numbers ? " · " : ""}

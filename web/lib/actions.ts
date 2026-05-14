@@ -3,28 +3,21 @@
 import { getSupabase } from "./supabase";
 import { Role } from "./types";
 
-// Conditional claim: only succeeds if no current owner OR the caller already owns it.
-// Returns true if the row was actually updated.
+// Atomic claim via SQL function. `force = true` overrides an existing owner;
+// otherwise the claim only succeeds if the row is unclaimed or already mine.
 export async function claimIncident(
   incidentNumber: string,
   role: Role,
-): Promise<{ ok: boolean; reason?: string }> {
+  force = false,
+): Promise<{ ok: boolean; reason?: string; owner?: Role }> {
   const supabase = getSupabase();
-  const { data, error } = await supabase
-    .from("ccil_incidents")
-    .update({ owner_role: role, owner_taken_at: new Date().toISOString() })
-    .eq("incident_number", incidentNumber)
-    .or(`owner_role.is.null,owner_role.eq.${role}`)
-    .select("incident_number")
-    .maybeSingle();
-
+  const { data, error } = await supabase.rpc("claim_ccil_incident", {
+    p_incident_number: incidentNumber,
+    p_claimer: role,
+    p_force: force,
+  });
   if (error) return { ok: false, reason: error.message };
-  if (!data) return { ok: false, reason: "Already owned by someone else" };
-
-  await supabase
-    .from("ccil_ownership_log")
-    .insert({ incident_number: incidentNumber, role, action: "claimed" });
-  return { ok: true };
+  return data as { ok: boolean; reason?: string; owner?: Role };
 }
 
 export async function releaseIncident(incidentNumber: string, role: Role) {
