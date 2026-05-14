@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --grid-line: rgba(63, 169, 245, 0.06);
+  --grid-bold: rgba(63, 169, 245, 0.12);
+}
+
+html,
+body {
+  background-color: #050c18;
+  color: #e8eef5;
+  min-height: 100%;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  /* Faint blue grid backdrop. Two layered gradients = thin lines + bold every 5. */
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-bold) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-bold) 1px, transparent 1px),
+    radial-gradient(ellipse at top, #0a1a32 0%, #050c18 60%);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px, 100% 100%;
+}
+
+/* Corner ticks — small L-shaped marks at each corner of a tile.
+   Applied as a wrapper utility; the tile gets `relative`, ticks position absolute. */
+.corner-ticks::before,
+.corner-ticks::after,
+.corner-ticks > .ct-bl,
+.corner-ticks > .ct-br {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: currentColor;
+  pointer-events: none;
+}
+.corner-ticks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+.corner-ticks::after {
+  top: -1px;
+  right: -1px;
+  border-top: 1.5px solid;
+  border-right: 1.5px solid;
+}
+.corner-ticks > .ct-bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 1.5px solid;
+  border-left: 1.5px solid;
+}
+.corner-ticks > .ct-br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+
+/* Slide-up bottom sheet */
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.sheet-enter {
+  animation: sheet-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Subtle pulse for tiles with recent events */
+@keyframes pulse-recent {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 82, 6, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(224, 82, 6, 0);
+  }
+}
+.recent-pulse {
+  animation: pulse-recent 2s ease-in-out infinite;
+}

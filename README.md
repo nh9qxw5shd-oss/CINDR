@@ -8,31 +8,41 @@ Bookmarklet scrapes CCIL → Supabase → realtime PWA.
 - **DB / backend**: Supabase (project hub instance, ref `ungtmfwxqawkdiflmora`)
 - **Ingest**: Supabase Edge Function (Deno)
 - **Scrape**: Browser bookmarklet on the CCIL search results page
-- **Front-end** (next phase): Next.js PWA, deployed to Vercel, installed via "Add to Home Screen"
+- **Front-end**: Next.js PWA in [`web/`](./web/), deployed to Vercel, installed via "Add to Home Screen"
 
 ## Repo layout
 
 ```
 ccil-tracker/
-├── supabase/
-│   ├── migrations/
-│   │   └── 001_initial_schema.sql      ← run in SQL editor
-│   └── functions/
-│       └── ccil-ingest/
-│           └── index.ts                ← deploy via supabase CLI
-├── bookmarklet/
-│   ├── source.js                       ← readable source
-│   ├── bookmarklet.txt                 ← minified, paste as bookmark URL
-│   └── README.md                       ← install + use guide
-└── README.md                           ← this file
+├── 001_initial_schema.sql      ← run in SQL editor
+├── index.ts                    ← Supabase Edge Function (deploy via CLI or MCP)
+├── source.js                   ← readable bookmarklet source
+├── bookmarklet.txt             ← minified bookmarklet, paste as bookmark URL
+├── web/                        ← Next.js 15 PWA (deploy to Vercel)
+│   ├── app/                    ← app-router pages + globals
+│   ├── components/             ← RolePicker, KpiBar, TileGrid, Tile, TileSheet
+│   ├── lib/                    ← supabase client, hooks, actions
+│   ├── public/                 ← manifest + icon
+│   └── README.md               ← front-end install + deploy guide
+└── README.md                   ← this file
 ```
+
+## "Vercel deployment downloads a file instead of showing a page"
+
+That happens when Vercel is pointed at the repo root, where `index.ts` is a
+Deno **Supabase Edge Function** rather than a website — Vercel serves it as
+`application/octet-stream` and the browser downloads it.
+
+The front-end lives in `web/`. In Vercel, set **Root Directory → `web`** and
+redeploy (or import the repo again with that setting from the start). See
+[`web/README.md`](./web/README.md) for the full deploy walkthrough.
 
 ## Deployment — backend
 
 ### 1. Schema
 
 Open the Supabase dashboard for project `ungtmfwxqawkdiflmora` → **SQL Editor** →
-paste the contents of `supabase/migrations/001_initial_schema.sql` → **Run**.
+paste the contents of `001_initial_schema.sql` → **Run**.
 
 This creates:
 - `ccil_incidents` (main table)
@@ -68,6 +78,13 @@ toggle `ccil_incidents` into the `supabase_realtime` publication.
 ### 4. Bookmarklet
 
 Follow `bookmarklet/README.md`.
+
+> **Heads-up on `#` in bookmarklets.** Browsers parse `javascript:` URLs as
+> URIs, so the first literal `#` is treated as the fragment delimiter and
+> everything after it is dropped — producing a `:` (unexpected token) syntax
+> error when the truncated script is parsed. The `bookmarklet.txt` here uses
+> `rgb(...)` colours instead of `#hex` for that reason. Don't reintroduce
+> `#hex` colours unless you URL-encode them as `%23`.
 
 ## Smoke test (before front-end)
 
@@ -121,6 +138,5 @@ PWA on iPad
 
 ## Next steps
 
-- Front-end: Next.js PWA with Insight design system (dark navy, orange accents,
-  Inter Tight + JetBrains Mono, corner ticks, blue grid backdrop).
-- Insight integration: pull `v_ccil_role_leaderboard` directly.
+- ~~Front-end: Next.js PWA with Insight design system.~~ Built — see [`web/`](./web/).
+- Insight integration: pull `v_ccil_role_leaderboard` directly into Insight.

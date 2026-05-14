@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#050C18"/>
+  <g stroke="rgba(63,169,245,0.18)" stroke-width="1">
+    <path d="M0 128H512M0 256H512M0 384H512M128 0V512M256 0V512M384 0V512"/>
+  </g>
+  <g fill="none" stroke="#E05206" stroke-width="6">
+    <path d="M64 64H120M64 64V120"/>
+    <path d="M448 64H392M448 64V120"/>
+    <path d="M64 448H120M64 448V392"/>
+    <path d="M448 448H392M448 448V392"/>
+  </g>
+  <g font-family="ui-monospace,monospace" font-weight="500" fill="#E8EEF5" text-anchor="middle">
+    <text x="256" y="232" font-size="92" letter-spacing="6">CCIL</text>
+    <text x="256" y="320" font-size="36" letter-spacing="10" fill="#E05206">TRACKER</text>
+  </g>
+</svg>
