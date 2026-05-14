@@ -15,10 +15,12 @@
   function toast(msg, type) {
     const el = document.createElement("div");
     el.textContent = msg;
+    // NOTE: do NOT use #hex colours in a bookmarklet — browsers treat the first
+    // `#` as the URL fragment delimiter and chop the rest of the script off.
     el.style.cssText =
       "position:fixed;bottom:20px;right:20px;padding:10px 16px;" +
-      "background:" + (type === "err" ? "#E74C3C" : "#E05206") + ";" +
-      "color:#fff;font-family:Menlo,Consolas,monospace;font-size:12px;" +
+      "background:" + (type === "err" ? "rgb(231,76,60)" : "rgb(224,82,6)") + ";" +
+      "color:rgb(255,255,255);font-family:Menlo,Consolas,monospace;font-size:12px;" +
       "z-index:99999;border-radius:3px;letter-spacing:.5px;" +
       "box-shadow:0 4px 20px rgba(0,0,0,.4);text-transform:uppercase;";
     document.body.appendChild(el);

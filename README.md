@@ -27,12 +27,27 @@ ccil-tracker/
 └── README.md                           ← this file
 ```
 
+## "I deployed it to Verve/Vercel and clicking the URL just downloads a file"
+
+That's expected — **this repo has no front-end yet**. `index.ts` is a Deno
+**Supabase Edge Function**, not a website. When you point Verve/Vercel at this
+repo and open the deployment URL, the host serves the raw `.ts` file with an
+`application/octet-stream` content type and the browser prompts a download.
+
+There is nothing to host on Verve/Vercel until the Next.js PWA (the "next phase"
+in the [Next steps](#next-steps) section) is built. For now the entire stack
+lives in Supabase: SQL schema + edge function + bookmarklet. Use the Supabase
+**Table Editor** to inspect data, and the bookmarklet to push it.
+
+If you've created a Verve/Vercel project, you can safely delete the deployment
+— it isn't doing anything.
+
 ## Deployment — backend
 
 ### 1. Schema
 
 Open the Supabase dashboard for project `ungtmfwxqawkdiflmora` → **SQL Editor** →
-paste the contents of `supabase/migrations/001_initial_schema.sql` → **Run**.
+paste the contents of `001_initial_schema.sql` → **Run**.
 
 This creates:
 - `ccil_incidents` (main table)
@@ -68,6 +83,13 @@ toggle `ccil_incidents` into the `supabase_realtime` publication.
 ### 4. Bookmarklet
 
 Follow `bookmarklet/README.md`.
+
+> **Heads-up on `#` in bookmarklets.** Browsers parse `javascript:` URLs as
+> URIs, so the first literal `#` is treated as the fragment delimiter and
+> everything after it is dropped — producing a `:` (unexpected token) syntax
+> error when the truncated script is parsed. The `bookmarklet.txt` here uses
+> `rgb(...)` colours instead of `#hex` for that reason. Don't reintroduce
+> `#hex` colours unless you URL-encode them as `%23`.
 
 ## Smoke test (before front-end)
 
